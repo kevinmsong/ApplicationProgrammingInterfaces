@@ -13,13 +13,8 @@ def clear_screen():
     else:
         _ = os.system('clear')
 
-def get_articles():
-    # os.system('cls' if os.name == 'nt' else 'clear')
-
-    url = ('https://newsapi.org/v2/top-headlines?'
-           'country=us&'
-           'apiKey=82471e592e8c4d3d95ec33e3add393be')
-    response = requests.get(url)
+def get_articles(this_url):    
+    response = requests.get(this_url)
 
     r = response.json()
 
@@ -39,5 +34,24 @@ def get_articles():
 
 while True:
     clear_screen()
-    get_articles()
+    print("DISCOUNT CABLE NEWS NETWORK")
+    print("\nTop Headlines")
+    get_articles(("https://newsapi.org/v2/top-headlines?"
+                  "country=us&"
+                  "apiKey=82471e592e8c4d3d95ec33e3add393be"))
+    
+    print("\nHealth News")
+    get_articles(("https://newsapi.org/v2/top-headlines?"
+                  "country=us&"
+                  "category=health&apiKey=82471e592e8c4d3d95ec33e3add393be"))
+    
+    print("\nScience News")
+    get_articles(("https://newsapi.org/v2/top-headlines?"
+                  "country=us&"
+                  "category=science&apiKey=82471e592e8c4d3d95ec33e3add393be"))
+    
+    print("\nTechnology News")
+    get_articles(("https://newsapi.org/v2/top-headlines?"
+                  "country=us&"
+                  "category=technology&apiKey=82471e592e8c4d3d95ec33e3add393be"))
     time.sleep(60)  # Pause execution for 60 seconds
