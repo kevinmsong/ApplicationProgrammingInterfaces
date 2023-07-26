@@ -35,23 +35,23 @@ def get_articles(this_url):
 while True:
     clear_screen()
     print("DISCOUNT CABLE NEWS NETWORK")
-    print("\nTop Headlines")
+    print("\nTOP HEADLINES")
     get_articles(("https://newsapi.org/v2/top-headlines?"
                   "country=us&"
                   "apiKey=82471e592e8c4d3d95ec33e3add393be"))
     
-    print("\nHealth News")
+    print("\nHEALTH NEWS")
     get_articles(("https://newsapi.org/v2/top-headlines?"
                   "country=us&"
                   "category=health&apiKey=82471e592e8c4d3d95ec33e3add393be"))
     
-    print("\nScience News")
+    print("\nSCIENCE NEWS")
     get_articles(("https://newsapi.org/v2/top-headlines?"
                   "country=us&"
                   "category=science&apiKey=82471e592e8c4d3d95ec33e3add393be"))
     
-    print("\nTechnology News")
+    print("\nTECHNOLOGY NEWS")
     get_articles(("https://newsapi.org/v2/top-headlines?"
                   "country=us&"
                   "category=technology&apiKey=82471e592e8c4d3d95ec33e3add393be"))
-    time.sleep(60)  # Pause execution for 60 seconds
+    time.sleep(300)  # Pause execution for 5 minutes
