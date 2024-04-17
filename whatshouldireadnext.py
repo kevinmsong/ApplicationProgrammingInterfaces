@@ -16,8 +16,6 @@ def get_similar_books(query):
             # Get the ID of the top search result
             book_id = data["books"][0][0]["id"]
 
-            print(book_id)
-
             # Fetch similar books for the top result
             similar_books_url = f"https://api.bigbookapi.com/{book_id}/similar/?api-key=869610e1a4b3492a843fc2e77c043b48"
             params = {"api-key": API_KEY}
