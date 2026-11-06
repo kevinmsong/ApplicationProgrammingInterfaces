@@ -1,13 +1,30 @@
 import argparse
-import requests
+import os
 
-API_KEY = "869610e1a4b3492a843fc2e77c043b48"  # Replace with your API key
+def require_env(name):
+    value = os.environ.get(name, "").strip()
+    if not value:
+        raise SystemExit(
+            f"Missing required environment variable {name}. "
+            "Set it before running this script (see .env.example)."
+        )
+    return value
+
+def fetch(url, params):
+    import requests
+
+    try:
+        return requests.get(url, params=params)
+    except requests.RequestException:
+        raise SystemExit("Big Book API request failed.") from None
 
 def get_similar_books(query):
+    api_key = require_env("BIGBOOK_API_KEY")
+
     # Search for the book by title or author
     search_url = "https://api.bigbookapi.com/search-books"
-    params = {"query": query, "api-key": API_KEY}
-    response = requests.get(search_url, params=params)
+    params = {"query": query, "api-key": api_key}
+    response = fetch(search_url, params)
 
     if response.status_code == 200:
         data = response.json()
@@ -17,9 +34,9 @@ def get_similar_books(query):
             book_id = data["books"][0][0]["id"]
 
             # Fetch similar books for the top result
-            similar_books_url = f"https://api.bigbookapi.com/{book_id}/similar/?api-key=869610e1a4b3492a843fc2e77c043b48"
-            params = {"api-key": API_KEY}
-            similar_books_response = requests.get(similar_books_url, params=params)
+            similar_books_url = f"https://api.bigbookapi.com/{book_id}/similar/"
+            params = {"api-key": api_key}
+            similar_books_response = fetch(similar_books_url, params)
 
             if similar_books_response.status_code == 200:
                 similar_books_data = similar_books_response.json()
@@ -33,11 +50,11 @@ def get_similar_books(query):
                 else:
                     print("No similar books found.")
             else:
-                print(f"Error: {similar_books_response.status_code} - {similar_books_response.text}")
+                print(f"Error: HTTP {similar_books_response.status_code}")
         else:
             print("No books found for the given query.")
     else:
-        print(f"Error: {response.status_code} - {response.text}")
+        print(f"Error: HTTP {response.status_code}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Get similar books for a title or author query.")
