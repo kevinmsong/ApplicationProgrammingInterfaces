@@ -1,11 +1,22 @@
 import time
 import os
+
+API_NINJAS_KEY = os.environ.get("API_NINJAS_KEY", "").strip()
+if not API_NINJAS_KEY:
+    raise SystemExit(
+        "Missing required environment variable API_NINJAS_KEY. "
+        "Set it before running this script (see .env.example)."
+    )
+
 import requests
 import json
 
 category = 'happiness'
 api_url = 'https://api.api-ninjas.com/v1/quotes?category={}'.format(category)
-response = requests.get(api_url, headers={'X-Api-Key': 'qs1rEr/IFadQwWPnWn6Ufg==bguWQvSpD7BiAgLY'})
+try:
+    response = requests.get(api_url, headers={'X-Api-Key': API_NINJAS_KEY})
+except requests.RequestException:
+    raise SystemExit("API Ninjas request failed.") from None
 r = response.json()
 
 def get_quote():

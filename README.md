@@ -25,8 +25,11 @@ Terminal ticker that clears the screen and prints US top headlines plus Health, 
 
 ```bash
 pip install requests pytz
+export NEWS_API_KEY=your_newsapi_key
 python news_api.py
 ```
+
+Requires `NEWS_API_KEY`.
 
 ### QuoteAPI (`quote_api.py`)
 
@@ -34,22 +37,38 @@ Fetches a happiness-category quote from API Ninjas and reprints it every 10 minu
 
 ```bash
 pip install requests
+export API_NINJAS_KEY=your_api_ninjas_key
 python quote_api.py
 ```
 
+Requires `API_NINJAS_KEY`.
+
 ### WhatShouldIReadNext (`whatshouldireadnext.py`)
 
-CLI that searches BigBookAPI by title/author and prints similar books.
+CLI that searches Big Book API by title/author and prints similar books.
 
 ```bash
 pip install requests
+export BIGBOOK_API_KEY=your_bigbook_api_key
 python whatshouldireadnext.py "Pride and Prejudice"
 ```
+
+Requires `BIGBOOK_API_KEY`.
 
 ## Requirements
 
 Typical deps across scripts: `requests`, `pillow`, `streamlit`, `pytz`. No shared `requirements.txt` is checked in.
 
-## Security
+## Environment variables
 
-Several scripts currently **hardcode third-party API keys** in source (`news_api.py`, `quote_api.py`, `whatshouldireadnext.py`). Treat those keys as compromised: **rotate them**, move values to environment variables or Streamlit secrets, and stop committing keys. This README does not include the keys.
+`news_api.py`, `quote_api.py`, and `whatshouldireadnext.py` load API keys from the environment. Copy `.env.example` to `.env`, fill in your own keys, and export them before running a script. `.env` is gitignored. Each script exits with an error that names the missing variable and does not print key values.
+
+| Variable | Script | Provider |
+| --- | --- | --- |
+| `NEWS_API_KEY` | `news_api.py` | NewsAPI |
+| `API_NINJAS_KEY` | `quote_api.py` | API Ninjas |
+| `BIGBOOK_API_KEY` | `whatshouldireadnext.py` | Big Book API |
+
+HeartHistory uses the Art Institute of Chicago public API and does not need a key.
+
+Keys that were previously committed in this repository should be rotated with each provider.

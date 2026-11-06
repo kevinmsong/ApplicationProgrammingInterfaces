@@ -1,9 +1,19 @@
-import requests
 import json
 from datetime import datetime
-from pytz import timezone
 import time
 import os
+
+NEWS_API_KEY = os.environ.get("NEWS_API_KEY", "").strip()
+if not NEWS_API_KEY:
+    raise SystemExit(
+        "Missing required environment variable NEWS_API_KEY. "
+        "Set it before running this script (see .env.example)."
+    )
+
+import requests
+from pytz import timezone
+
+NEWS_API_URL = "https://newsapi.org/v2/top-headlines"
 
 def clear_screen():
     # for windows
@@ -13,8 +23,14 @@ def clear_screen():
     else:
         _ = os.system('clear')
 
-def get_articles(this_url):    
-    response = requests.get(this_url)
+def get_articles(category=None):
+    params = {"country": "us", "apiKey": NEWS_API_KEY}
+    if category:
+        params["category"] = category
+    try:
+        response = requests.get(NEWS_API_URL, params=params)
+    except requests.RequestException:
+        raise SystemExit("NewsAPI request failed.") from None
 
     r = response.json()
 
@@ -36,22 +52,14 @@ while True:
     clear_screen()
     print("DISCOUNT CABLE NEWS NETWORK")
     print("\nTOP HEADLINES")
-    get_articles(("https://newsapi.org/v2/top-headlines?"
-                  "country=us&"
-                  "apiKey=82471e592e8c4d3d95ec33e3add393be"))
-    
+    get_articles()
+
     print("\nHEALTH NEWS")
-    get_articles(("https://newsapi.org/v2/top-headlines?"
-                  "country=us&"
-                  "category=health&apiKey=82471e592e8c4d3d95ec33e3add393be"))
-    
+    get_articles("health")
+
     print("\nSCIENCE NEWS")
-    get_articles(("https://newsapi.org/v2/top-headlines?"
-                  "country=us&"
-                  "category=science&apiKey=82471e592e8c4d3d95ec33e3add393be"))
-    
+    get_articles("science")
+
     print("\nTECHNOLOGY NEWS")
-    get_articles(("https://newsapi.org/v2/top-headlines?"
-                  "country=us&"
-                  "category=technology&apiKey=82471e592e8c4d3d95ec33e3add393be"))
+    get_articles("technology")
     time.sleep(300)  # Pause execution for 5 minutes
